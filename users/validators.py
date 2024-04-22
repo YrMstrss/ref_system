@@ -4,6 +4,9 @@ from users.models import User
 
 
 class UserDoesNotExistValidator:
+    """
+    Валидатор для проверки на существование пользователя со введенным инвайт кодом
+    """
     def __init__(self, field):
         self.field = field
 
