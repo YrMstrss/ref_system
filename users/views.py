@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
-from users.serializers import UserAuthSerializer, UserSerializer
+from users.serializers import UserAuthSerializer, UserSerializer, UserAddInviteCodeSerializer
 from users.services import create_otp, create_invite_code
 
 
@@ -31,9 +31,9 @@ class GenerateCodeView(APIView):
             user = User.objects.get(phone=phone)
         except User.DoesNotExist:
             user = User.objects.create_user(phone=phone)
+            user.invite_code = create_invite_code()
 
         otp = create_otp()
-        user.invite_code = create_invite_code()
         user.otp = otp
         user.save()
 
@@ -77,6 +77,21 @@ class AuthUserView(APIView):
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
+
+    def get_object(self):
+        return User.objects.get(pk=self.request.user.pk)
+
+
+class UserProfileSerializer:
+    pass
+
+
+class UserUpdateAPIView(generics.UpdateAPIView):
+    """
+    Контроллер для добавления кода в профиле пользователя
+    """
+    serializer_class = UserAddInviteCodeSerializer
+    queryset = User.objects.all()
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
