@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 
 from users.models import User
@@ -22,3 +23,20 @@ class UserSerializer(serializers.ModelSerializer):
             return User.objects.get(inviter_code=instance.invite_code)
         except User.DoesNotExist:
             return None
+
+
+class UserAddInviteCodeSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = ('inviter_code',)
+
+    def update(self, instance, validated_data):
+        if not instance.inviter_code:
+            try:
+                User.objects.get(invite_code=validated_data['inviter_code'])
+                super().update(instance, validated_data)
+                return instance
+            except User.DoesNotExist:
+                raise ValidationError('Введен неверный инвайт код')
+        else:
+            raise ValidationError('Вы уже вводили инвайт код')
