@@ -3,6 +3,7 @@ import time
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.models import User
@@ -37,4 +38,5 @@ class GenerateCodeView(APIView):
         time.sleep(2)
         print('Ваш код для входа:', otp)
 
-        return HttpResponseRedirect(redirect_to=reverse('users:auth_user', args=(user.pk,)))
+        # return HttpResponseRedirect(redirect_to=reverse('users:auth_user', args=(user.pk,)))
+        return Response({'message': 'Код отправлен'})

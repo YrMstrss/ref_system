@@ -15,12 +15,12 @@ class UserManager(BaseUserManager):
             raise ValueError('У пользователя должно быть указан номер телефона')
         if re.match(pattern, phone) is None:
             raise ValueError('Проверьте номер телефона')
-        user = self.model(email=self.normalize_email(phone), **extra_fields)
+        user = self.model(phone=phone, **extra_fields)
         user.save()
 
         return user
 
-    def create_user(self, email, **extra_fields):
+    def create_user(self, phone, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        return self._create_user(email, **extra_fields)
+        return self._create_user(phone, **extra_fields)
