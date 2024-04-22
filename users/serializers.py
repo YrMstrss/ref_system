@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 
 from users.models import User
-from users.validators import UserDoesNotExistValidator, UserAlreadyAddCodeValidator
+from users.validators import UserDoesNotExistValidator
 
 
 class UserAuthSerializer(serializers.ModelSerializer):
