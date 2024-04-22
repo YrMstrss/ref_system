@@ -10,7 +10,7 @@ class User(AbstractUser):
     password = None
     otp = models.CharField(max_length=6, verbose_name='одноразовый код', null=True, blank=True)
     invite_code = models.CharField(unique=True, max_length=6, verbose_name='инвайт код')
-    invited_users = models.ManyToManyField('User', null=True, blank=True)
+    inviter_code = models.CharField(max_length=6, null=True, blank=True, verbose_name='код пригласившего')
 
     objects = UserManager()
 
