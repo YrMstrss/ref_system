@@ -34,6 +34,8 @@ class UserAddInviteCodeSerializer(UserSerializer):
         if not instance.inviter_code:
             try:
                 User.objects.get(invite_code=validated_data['inviter_code'])
+                if validated_data['inviter_code'] == instance.invite_code:
+                    raise ValidationError('Вы не можете ввести свой инвайт код')
                 super().update(instance, validated_data)
                 return instance
             except User.DoesNotExist:
