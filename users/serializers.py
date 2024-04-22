@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_invited_users(self, instance):
         try:
-            return User.objects.get(inviter_code=instance.invite_code)
+            return [user.phone for user in User.objects.all() if user.inviter_code == instance.invite_code]
         except User.DoesNotExist:
             return None
 
