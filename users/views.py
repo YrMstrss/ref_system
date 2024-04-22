@@ -2,13 +2,14 @@ import time
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
-from users.serializers import UserAuthSerializer
+from users.serializers import UserAuthSerializer, UserSerializer
 from users.services import create_otp, create_invite_code
 
 
@@ -49,10 +50,10 @@ class AuthUserView(APIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Получает email пользователя
+        Получает номер телефона пользователя
         """
         user = User.objects.get(pk=kwargs.get('pk'))
-        return Response({'email': user.email})
+        return Response({'phone': user.phone})
 
     def post(self, request, *args, **kwargs):
         """
@@ -72,3 +73,10 @@ class AuthUserView(APIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
+
+
+class UserRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return User.objects.get(pk=self.request.user.pk)
